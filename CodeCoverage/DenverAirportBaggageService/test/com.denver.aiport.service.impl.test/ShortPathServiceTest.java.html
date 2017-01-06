@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>ShortPathServiceTest.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">DenverAirportBaggageService (Jan 6, 2017 8:03:30 AM)</a> &gt; <a href="../../index.html" class="el_group">DenverAirportBaggageService</a> &gt; <a href="../index.html" class="el_bundle">test</a> &gt; <a href="index.source.html" class="el_package">com.denver.aiport.service.impl.test</a> &gt; <span class="el_source">ShortPathServiceTest.java</span></div><h1>ShortPathServiceTest.java</h1><pre class="source lang-java linenums">package com.denver.aiport.service.impl.test;
+
+import static org.junit.Assert.*;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import com.denver.airport.domain.Node;
+import com.denver.airport.domain.ShortPath;
+import com.denver.airport.exception.NodeServiceException;
+import com.denver.airport.service.NodeService;
+import com.denver.airport.service.PathService;
+import com.denver.airport.service.impl.AirportNodeService;
+import com.denver.airport.service.impl.ShortPathService;
+
+<span class="fc" id="L20">public class ShortPathServiceTest {</span>
+	private PathService pathService;
+	@Before
+	public void setUp() throws Exception {
+<span class="fc" id="L24">		pathService = new ShortPathService();</span>
+<span class="fc" id="L25">	}</span>
+
+	@After
+	public void tearDown() throws Exception {
+<span class="fc" id="L29">	}</span>
+
+	@Test
+	public void testCalculateShortPath_returnsNull_whenNodeMapNull() {
+<span class="fc" id="L33">		ShortPath[][] shortPaths = pathService.calculateShortPath(null);</span>
+<span class="fc" id="L34">		assertNull(shortPaths);</span>
+<span class="fc" id="L35">	}</span>
+	
+	@Test
+	public void testCalculateShortPath_returnsZeroSize_whenNodeMapSizeZero() {
+<span class="fc" id="L39">		ShortPath[][] shortPaths = pathService.calculateShortPath(new HashMap&lt;&gt;());</span>
+<span class="fc" id="L40">		assertNotNull(shortPaths);</span>
+<span class="fc" id="L41">		assertEquals(0, shortPaths.length);</span>
+<span class="fc" id="L42">	}</span>
+	
+	@Test
+	public void testCalculateShortPath_returnsValidPaths_whenValidNodeMapPassed() throws NodeServiceException {
+<span class="fc" id="L46">		NodeService nodeService = new AirportNodeService();</span>
+<span class="fc" id="L47">		nodeService.addNode(&quot;A1&quot;, &quot;A3&quot;, 2);</span>
+<span class="fc" id="L48">		nodeService.addNode(&quot;A3&quot;, &quot;A4&quot;, 6);</span>
+<span class="fc" id="L49">		nodeService.addNode(&quot;A1&quot;, &quot;A5&quot;, 1);</span>
+<span class="fc" id="L50">		Map&lt;String, Node&gt; nodes = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L51">		nodes.put(&quot;A1&quot;, nodeService.getNode(&quot;A1&quot;));</span>
+<span class="fc" id="L52">		nodes.put(&quot;A3&quot;, nodeService.getNode(&quot;A3&quot;));</span>
+<span class="fc" id="L53">		nodes.put(&quot;A4&quot;, nodeService.getNode(&quot;A4&quot;));</span>
+<span class="fc" id="L54">		nodes.put(&quot;A5&quot;, nodeService.getNode(&quot;A5&quot;));</span>
+<span class="fc" id="L55">		ShortPath[][] shortPaths = pathService.calculateShortPath(nodes);</span>
+<span class="fc" id="L56">		assertNotNull(shortPaths);</span>
+<span class="fc" id="L57">		assertEquals(4, shortPaths.length);</span>
+<span class="fc" id="L58">		int length = shortPaths[0][0].getPathLength();</span>
+<span class="fc" id="L59">		assertEquals(0, length);</span>
+<span class="fc" id="L60">		length = shortPaths[0][1].getPathLength();</span>
+<span class="fc" id="L61">		assertEquals(2, length);</span>
+<span class="fc" id="L62">		length = shortPaths[0][2].getPathLength();</span>
+<span class="fc" id="L63">		assertEquals(8, length);</span>
+<span class="fc" id="L64">		length = shortPaths[0][3].getPathLength();</span>
+<span class="fc" id="L65">		assertEquals(1, length);</span>
+		
+<span class="fc" id="L67">		length = shortPaths[1][0].getPathLength();</span>
+<span class="fc" id="L68">		assertEquals(2, length);</span>
+<span class="fc" id="L69">		length = shortPaths[1][1].getPathLength();</span>
+<span class="fc" id="L70">		assertEquals(0, length);</span>
+<span class="fc" id="L71">		length = shortPaths[1][2].getPathLength();</span>
+<span class="fc" id="L72">		assertEquals(6, length);</span>
+<span class="fc" id="L73">		length = shortPaths[1][3].getPathLength();</span>
+<span class="fc" id="L74">		assertEquals(3, length);</span>
+		
+<span class="fc" id="L76">		length = shortPaths[2][0].getPathLength();</span>
+<span class="fc" id="L77">		assertEquals(8, length);</span>
+<span class="fc" id="L78">		length = shortPaths[2][1].getPathLength();</span>
+<span class="fc" id="L79">		assertEquals(6, length);</span>
+<span class="fc" id="L80">		length = shortPaths[2][2].getPathLength();</span>
+<span class="fc" id="L81">		assertEquals(0, length);</span>
+<span class="fc" id="L82">		length = shortPaths[2][3].getPathLength();</span>
+<span class="fc" id="L83">		assertEquals(9, length);</span>
+		
+<span class="fc" id="L85">		length = shortPaths[3][0].getPathLength();</span>
+<span class="fc" id="L86">		assertEquals(1, length);</span>
+<span class="fc" id="L87">		length = shortPaths[3][1].getPathLength();</span>
+<span class="fc" id="L88">		assertEquals(3, length);</span>
+<span class="fc" id="L89">		length = shortPaths[3][2].getPathLength();</span>
+<span class="fc" id="L90">		assertEquals(9, length);</span>
+<span class="fc" id="L91">		length = shortPaths[3][3].getPathLength();</span>
+<span class="fc" id="L92">		assertEquals(0, length);</span>
+		
+<span class="fc" id="L94">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span>DenverAirportBaggageService (Jan 6, 2017 8:03:30 AM)</div></body></html>

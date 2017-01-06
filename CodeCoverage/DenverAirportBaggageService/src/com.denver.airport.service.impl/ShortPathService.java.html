@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>ShortPathService.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">DenverAirportBaggageService (Jan 6, 2017 8:03:30 AM)</a> &gt; <a href="../../index.html" class="el_group">DenverAirportBaggageService</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">com.denver.airport.service.impl</a> &gt; <span class="el_source">ShortPathService.java</span></div><h1>ShortPathService.java</h1><pre class="source lang-java linenums">package com.denver.airport.service.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
+
+import com.denver.airport.domain.Node;
+import com.denver.airport.domain.ShortPath;
+import com.denver.airport.service.PathService;
+
+<span class="fc" id="L13">public class ShortPathService implements PathService {</span>
+	private ShortPath[][] shortPaths;
+<span class="fc" id="L15">	private Stack&lt;Node&gt; nodes = new Stack&lt;&gt;();</span>
+	
+	public ShortPath[][] calculateShortPath(Map&lt;String, Node&gt; nodeMap) {
+<span class="fc bfc" id="L18" title="All 2 branches covered.">		if(nodeMap != null){</span>
+<span class="fc" id="L19">			shortPaths = new ShortPath[nodeMap.size()][nodeMap.size()];</span>
+<span class="fc bfc" id="L20" title="All 2 branches covered.">			for (String node : nodeMap.keySet()) {</span>
+<span class="fc" id="L21">				int index = nodeMap.get(node).getIndex();</span>
+<span class="fc" id="L22">				setShortPathInBiDirArray(index, index, new ShortPath(ZERO_PATH_LENGTH, node));</span>
+<span class="fc" id="L23">				nodes.removeAllElements();</span>
+<span class="fc" id="L24">				nodes.push(nodeMap.get(node));</span>
+<span class="fc" id="L25">				doDFSToFindShortPath(nodeMap.get(node), nodeMap);</span>
+			}
+		}
+<span class="fc" id="L28">		return shortPaths;</span>
+	}
+	
+	private String getPath() {
+<span class="fc" id="L32">		StringBuffer path = new StringBuffer();</span>
+<span class="fc" id="L33">		List&lt;Node&gt; nodesLst = new ArrayList&lt;&gt;(nodes);</span>
+<span class="fc" id="L34">		nodesLst.forEach((node) -&gt; path.append(node.getName()).append(PATH_SEPARATOR));</span>
+<span class="fc" id="L35">		return path.toString();</span>
+	}
+
+	private int getPathLen(Map&lt;String, Node&gt; nodeMap) {
+<span class="fc" id="L39">		int pathLen = 0;</span>
+<span class="fc" id="L40">		List&lt;Node&gt; nodesLst = new ArrayList&lt;&gt;(nodes);</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">		for (int i = 1; i &lt; nodesLst.size(); i++) {</span>
+<span class="fc" id="L42">			String currentNode = nodesLst.get(i).getName();</span>
+<span class="fc" id="L43">			String previousNode = nodesLst.get(i - 1).getName();</span>
+<span class="fc" id="L44">			pathLen = pathLen + nodeMap.get(currentNode).getConnectedNodes().get(previousNode);</span>
+		}
+<span class="fc" id="L46">		return pathLen;</span>
+	}
+
+	private void setShortPathInBiDirArray(int srcIndex, int destIndex, ShortPath sp) {
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">		if (shortPaths[srcIndex][destIndex] == null</span>
+<span class="nc bnc" id="L51" title="All 2 branches missed.">				|| shortPaths[srcIndex][destIndex].getPathLength() &gt; sp.getPathLength()) {</span>
+<span class="fc" id="L52">			shortPaths[srcIndex][destIndex] = sp;</span>
+		}
+<span class="fc" id="L54">	}</span>
+
+	private List&lt;String&gt; getNodesListFromStack() {
+<span class="fc" id="L57">		List&lt;String&gt; lst = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L58">		nodes.forEach((node) -&gt; lst.add(node.getName()));</span>
+<span class="fc" id="L59">		return lst;</span>
+	}
+
+	private void doDFSToFindShortPath(Node srcNode, Map&lt;String, Node&gt; nodeMap) {
+<span class="fc" id="L63">		Set&lt;String&gt; connNodes = srcNode.getConnectedNodes(getNodesListFromStack()).keySet();</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">		for (String connNode : connNodes) {</span>
+<span class="fc" id="L65">			nodes.push(nodeMap.get(connNode));</span>
+<span class="fc" id="L66">			ShortPath sp = new ShortPath(getPathLen(nodeMap), getPath());</span>
+<span class="fc" id="L67">			setShortPathInBiDirArray(nodes.firstElement().getIndex(), nodeMap.get(connNode).getIndex(), sp);</span>
+<span class="fc" id="L68">			doDFSToFindShortPath(nodeMap.get(connNode), nodeMap);</span>
+		}
+<span class="fc" id="L70">		nodes.pop();</span>
+<span class="fc" id="L71">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span>DenverAirportBaggageService (Jan 6, 2017 8:03:30 AM)</div></body></html>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>FlightDepartureService.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">DenverAirportBaggageService (Jan 6, 2017 8:03:30 AM)</a> &gt; <a href="../../index.html" class="el_group">DenverAirportBaggageService</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">com.denver.airport.service.impl</a> &gt; <span class="el_source">FlightDepartureService.java</span></div><h1>FlightDepartureService.java</h1><pre class="source lang-java linenums">package com.denver.airport.service.impl;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.denver.airport.domain.FlightDepartureDetail;
+import com.denver.airport.exception.DepartureServiceException;
+import com.denver.airport.service.DepartureService;
+import com.denver.airport.util.StringUtils;
+
+public class FlightDepartureService implements DepartureService {
+	private Map&lt;String, FlightDepartureDetail&gt; departureDetails;
+
+<span class="fc" id="L14">	public FlightDepartureService() {</span>
+<span class="fc" id="L15">		departureDetails = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L16">	}</span>
+
+	@Override
+	public void addDeparture(String flightId, String gate, String destination, String flightTime) throws DepartureServiceException{
+<span class="fc bfc" id="L20" title="All 4 branches covered.">		if(!StringUtils.isEmpty(flightId) &amp;&amp; !StringUtils.isEmpty(gate)</span>
+<span class="fc bfc" id="L21" title="All 4 branches covered.">				&amp;&amp; !StringUtils.isEmpty(destination) &amp;&amp; !StringUtils.isEmpty(flightTime)){</span>
+<span class="fc" id="L22">		FlightDepartureDetail flightDepartureDetail = </span>
+<span class="fc" id="L23">					new FlightDepartureDetail(flightId, gate, destination, flightTime);</span>
+<span class="fc" id="L24">			departureDetails.put(flightId, flightDepartureDetail);</span>
+<span class="fc" id="L25">		}else{</span>
+<span class="fc" id="L26">			throw new DepartureServiceException(ADD_DEPARTURE_ERROR_MSG); </span>
+		}
+<span class="fc" id="L28">	}</span>
+	
+	@Override
+	public FlightDepartureDetail getFlightDepartureDetail(String flightId){
+<span class="fc" id="L32">		return departureDetails.get(flightId);</span>
+	}
+
+	@Override
+	public boolean hasValidData() {
+<span class="pc bpc" id="L37" title="1 of 4 branches missed.">		if(departureDetails != null &amp;&amp; departureDetails.size() &gt; 0)</span>
+<span class="fc" id="L38">			return true;</span>
+<span class="fc" id="L39">		return false;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span>DenverAirportBaggageService (Jan 6, 2017 8:03:30 AM)</div></body></html>

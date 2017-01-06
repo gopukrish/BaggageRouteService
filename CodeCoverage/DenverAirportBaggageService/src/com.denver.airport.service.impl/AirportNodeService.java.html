@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>AirportNodeService.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">DenverAirportBaggageService (Jan 6, 2017 8:03:30 AM)</a> &gt; <a href="../../index.html" class="el_group">DenverAirportBaggageService</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">com.denver.airport.service.impl</a> &gt; <span class="el_source">AirportNodeService.java</span></div><h1>AirportNodeService.java</h1><pre class="source lang-java linenums">package com.denver.airport.service.impl;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.denver.airport.domain.Node;
+import com.denver.airport.domain.ShortPath;
+import com.denver.airport.exception.NodeServiceException;
+import com.denver.airport.service.NodeService;
+import com.denver.airport.service.PathService;
+import com.denver.airport.util.StringUtils;
+
+public class AirportNodeService implements NodeService {
+<span class="fc" id="L14">	private Map&lt;String, Node&gt; nodeMap = null;</span>
+<span class="fc" id="L15">	private int nodeIndex = 0;</span>
+	private ShortPath[][] shortPaths;
+	private PathService shortPathService;
+
+	public AirportNodeService() {
+<span class="fc" id="L20">		this(new ShortPathService());</span>
+<span class="fc" id="L21">	}</span>
+
+<span class="fc" id="L23">	public AirportNodeService(PathService pathService) {</span>
+<span class="fc" id="L24">		nodeMap = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L25">		shortPathService = pathService;</span>
+<span class="fc" id="L26">	}</span>
+
+	private void createNode(String nodeName, String destNodeName, int hours) {
+<span class="fc bfc" id="L29" title="All 2 branches covered.">		if (nodeMap.containsKey(nodeName))</span>
+<span class="fc" id="L30">			nodeMap.get(nodeName).addConnectedNode(destNodeName, hours);</span>
+		else
+<span class="fc" id="L32">			nodeMap.put(nodeName, new Node(nodeName, destNodeName, nodeIndex++, hours));</span>
+<span class="fc" id="L33">	}</span>
+
+	public void addNode(String srcNode, String destNode, int hours) throws NodeServiceException {
+<span class="fc bfc" id="L36" title="All 4 branches covered.">		if(!StringUtils.isEmpty(srcNode) &amp;&amp; !StringUtils.isEmpty(destNode)</span>
+<span class="fc bfc" id="L37" title="All 2 branches covered.">				&amp;&amp; !srcNode.equalsIgnoreCase(destNode)){</span>
+<span class="fc" id="L38">				createNode(srcNode, destNode, hours);</span>
+<span class="fc" id="L39">				createNode(destNode, srcNode, hours);</span>
+<span class="fc" id="L40">		}</span>
+		else
+<span class="fc" id="L42">			throw new NodeServiceException(ADD_NODE_ERROR);</span>
+<span class="fc" id="L43">	}</span>
+	
+	@Override
+	public void calculateShortPathForNodes() {
+<span class="pc bpc" id="L47" title="1 of 2 branches missed.">		if(shortPathService != null)</span>
+<span class="fc" id="L48">			shortPaths = shortPathService.calculateShortPath(nodeMap);</span>
+<span class="fc" id="L49">	}</span>
+
+	private int getNodeIndex(String node) {
+<span class="fc" id="L52">		return nodeMap.get(node).getIndex();</span>
+	}
+
+	@Override
+	public ShortPath getShortPath(String srcNode, String destNode) {
+<span class="fc bfc" id="L57" title="All 2 branches covered.">		if(shortPaths != null)</span>
+<span class="fc" id="L58">			return shortPaths[getNodeIndex(srcNode)][getNodeIndex(destNode)];</span>
+<span class="fc" id="L59">		return null;</span>
+	}
+	
+	@Override
+	public Node getNode(String node) {
+<span class="fc" id="L64">		return nodeMap.get(node);</span>
+	}
+
+	@Override
+	public boolean hasValidData() {
+<span class="pc bpc" id="L69" title="1 of 4 branches missed.">		if(nodeMap != null &amp;&amp; nodeMap.size() &gt; 0)</span>
+<span class="fc" id="L70">			return true;</span>
+<span class="fc" id="L71">		return false;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span>DenverAirportBaggageService (Jan 6, 2017 8:03:30 AM)</div></body></html>

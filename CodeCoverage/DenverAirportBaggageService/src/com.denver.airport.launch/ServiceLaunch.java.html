@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>ServiceLaunch.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">DenverAirportBaggageService (Jan 6, 2017 8:03:30 AM)</a> &gt; <a href="../../index.html" class="el_group">DenverAirportBaggageService</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">com.denver.airport.launch</a> &gt; <span class="el_source">ServiceLaunch.java</span></div><h1>ServiceLaunch.java</h1><pre class="source lang-java linenums">package com.denver.airport.launch;
+
+import com.denver.airport.exception.AirportServiceException;
+import com.denver.airport.exception.InputException;
+import com.denver.airport.service.AirportService;
+import com.denver.airport.service.impl.DenverAirportService;
+import com.denver.airport.util.Section;
+import com.denver.airport.util.StringUtils;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Scanner;
+
+public class ServiceLaunch {
+	private Scanner scanner;
+	private String processingSection;
+	private AirportService airportService;
+	private InputHandlerFactory handlerFactory;
+	
+	public ServiceLaunch() {
+<span class="nc" id="L20">		this(System.in, new DenverAirportService());</span>
+<span class="nc" id="L21">	}</span>
+
+<span class="nc" id="L23">	public ServiceLaunch(InputStream stream, AirportService airportService) {</span>
+<span class="nc" id="L24">		scanner = new Scanner(stream);</span>
+<span class="nc" id="L25">		this.airportService = airportService;</span>
+<span class="nc" id="L26">		handlerFactory = new InputHandlerFactory();</span>
+<span class="nc" id="L27">	}</span>
+
+	public final String getProcessingSection() {
+<span class="nc" id="L30">		return processingSection;</span>
+	}
+
+	public final void setProcessingSection(String processingSection) {
+<span class="nc" id="L34">		this.processingSection = processingSection;</span>
+<span class="nc" id="L35">	}</span>
+
+	private void readInput() {
+<span class="nc" id="L38">		System.out.println(&quot;\nPlease start entering Section inputs :&quot;);</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">		while (scanner.hasNextLine()) {</span>
+<span class="nc" id="L40">			String nextLine = scanner.nextLine();</span>
+<span class="nc bnc" id="L41" title="All 2 branches missed.">			if (StringUtils.isEmpty(nextLine)) {</span>
+<span class="nc" id="L42">				break;</span>
+			}
+<span class="nc bnc" id="L44" title="All 2 branches missed.">			if (nextLine.toLowerCase().startsWith(Section.SECTION_PREFIX.toLowerCase())) {</span>
+<span class="nc" id="L45">				setProcessingSection(StringUtils.getSubstring(Section.SECTION_PREFIX, nextLine));</span>
+<span class="nc" id="L46">				continue;</span>
+			}
+			try {
+<span class="nc" id="L49">				processSectionInput(nextLine);</span>
+<span class="nc" id="L50">			} catch (InputException | AirportServiceException e) {</span>
+<span class="nc" id="L51">				System.out.println(&quot;Error : &quot; + e.getMessage());</span>
+			}
+		}
+<span class="nc" id="L54">	}</span>
+
+	private void printBaggageOptimalPath() {
+		try {
+<span class="nc bnc" id="L58" title="All 2 branches missed.">			if (airportService.hasValidData()) {</span>
+<span class="nc" id="L59">				List&lt;String&gt; shortPaths = airportService.getAllBaggageShortestPath();</span>
+<span class="nc" id="L60">				System.out.println(&quot;Baggage optimal route\n&quot;);</span>
+<span class="nc" id="L61">				shortPaths.forEach((path) -&gt; System.out.println(path));</span>
+<span class="nc" id="L62">			} else {</span>
+<span class="nc" id="L63">				System.out.println(&quot;No valid data found to calculate optimal route&quot;);</span>
+			}
+<span class="nc" id="L65">		} catch (AirportServiceException e) {</span>
+<span class="nc" id="L66">			System.out.println(&quot; Error : &quot; + e.getMessage());</span>
+		}
+<span class="nc" id="L68">	}</span>
+
+	private boolean isValidSection() {
+<span class="nc bnc" id="L71" title="All 2 branches missed.">		if (null != getProcessingSection()) {</span>
+<span class="nc" id="L72">			String section = getProcessingSection().trim();</span>
+<span class="nc bnc" id="L73" title="All 2 branches missed.">			if (section.equalsIgnoreCase(Section.BAGS_SECTION)</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">					|| section.equalsIgnoreCase(Section.CONVEYOR_SYSTEM_SECTION)</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">					|| section.equalsIgnoreCase(Section.DEPARTURES_SECTION)) {</span>
+<span class="nc" id="L76">				return true;</span>
+			}
+		}
+<span class="nc" id="L79">		return false;</span>
+	}
+
+	private void processSectionInput(String input) throws InputException, AirportServiceException {
+<span class="nc bnc" id="L83" title="All 4 branches missed.">		if (StringUtils.isEmpty(getProcessingSection()) || !isValidSection()) {</span>
+<span class="nc" id="L84">			System.out.println(&quot;Not valid section found, ignoring input&quot;);</span>
+<span class="nc" id="L85">			return;</span>
+		}
+<span class="nc" id="L87">		InputHandler handler = handlerFactory.getInputHandler(getProcessingSection().trim());</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">		if(handler != null)</span>
+<span class="nc" id="L89">			handler.handle(input, airportService);</span>
+		else
+<span class="nc" id="L91">			System.out.println(&quot;No valid input handler found&quot;);</span>
+<span class="nc" id="L92">	}</span>
+	
+	public static void main(String[] args) {
+<span class="nc" id="L95">		System.out.println(&quot;Welcome to Denver Airport Baggage Service\n&quot;);</span>
+<span class="nc" id="L96">		System.out.println(&quot;Please Enter each section in below format\n&quot;);</span>
+<span class="nc" id="L97">		System.out.println(&quot;# Section: Conveyor System&quot; + &quot;\n&quot; + &quot;SourceNode DestinationNode TravelTime&quot;);</span>
+<span class="nc" id="L98">		System.out.println(&quot;# Section: Departures&quot; + &quot;\n&quot; + &quot;FlightId FlightGate Destination FligthTime&quot;);</span>
+<span class="nc" id="L99">		System.out.println(&quot;# Section: Bags&quot; + &quot;\n&quot; + &quot;BagNumber EntryPoint FlightId&quot;);</span>
+<span class="nc" id="L100">		System.out.println(&quot;\nNote : Please hit Enter(Empty line) at last to start processing&quot;);</span>
+<span class="nc" id="L101">		ServiceLaunch launch = new ServiceLaunch(System.in, new DenverAirportService());</span>
+<span class="nc" id="L102">		launch.readInput();</span>
+<span class="nc" id="L103">		launch.printBaggageOptimalPath();</span>
+<span class="nc" id="L104">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span>DenverAirportBaggageService (Jan 6, 2017 8:03:30 AM)</div></body></html>

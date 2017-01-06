@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>FlightDepartureServiceTest.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">DenverAirportBaggageService (Jan 6, 2017 8:03:30 AM)</a> &gt; <a href="../../index.html" class="el_group">DenverAirportBaggageService</a> &gt; <a href="../index.html" class="el_bundle">test</a> &gt; <a href="index.source.html" class="el_package">com.denver.aiport.service.impl.test</a> &gt; <span class="el_source">FlightDepartureServiceTest.java</span></div><h1>FlightDepartureServiceTest.java</h1><pre class="source lang-java linenums">package com.denver.aiport.service.impl.test;
+
+import static org.junit.Assert.*;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import com.denver.airport.exception.DepartureServiceException;
+import com.denver.airport.service.DepartureService;
+import com.denver.airport.service.impl.FlightDepartureService;
+
+<span class="fc" id="L13">public class FlightDepartureServiceTest {</span>
+	private DepartureService departureService;
+	@Before
+	public void setUp() throws Exception {
+<span class="fc" id="L17">		departureService = new FlightDepartureService();</span>
+<span class="fc" id="L18">	}</span>
+
+	@After
+	public void tearDown() throws Exception {
+<span class="fc" id="L22">	}</span>
+
+	@Test(expected=DepartureServiceException.class)
+	public void testAddDeparture_throwsException_whenInputsNull() throws DepartureServiceException {
+<span class="nc" id="L26">		departureService.addDeparture(null, null, null, null);</span>
+<span class="nc" id="L27">	}</span>
+	
+	@Test(expected=DepartureServiceException.class)
+	public void testAddDeparture_throwsException_whenInputsEmpty() throws DepartureServiceException {
+<span class="nc" id="L31">		departureService.addDeparture(null, null, null, null);</span>
+<span class="nc" id="L32">	}</span>
+	
+	@Test(expected=DepartureServiceException.class)
+	public void testAddDeparture_throwsException_whenFlightIdNull() throws DepartureServiceException {
+<span class="nc" id="L36">		departureService.addDeparture(null, &quot;A1&quot;, &quot;MIA&quot;, &quot;09:33&quot;);</span>
+<span class="nc" id="L37">	}</span>
+	
+	@Test(expected=DepartureServiceException.class)
+	public void testAddDeparture_throwsException_whenFlightIdEmpty() throws DepartureServiceException {
+<span class="nc" id="L41">		departureService.addDeparture(&quot;&quot;, &quot;A1&quot;, &quot;MIA&quot;, &quot;09:33&quot;);</span>
+<span class="nc" id="L42">	}</span>
+	
+	@Test(expected=DepartureServiceException.class)
+	public void testAddDeparture_throwsException_whenGateNull() throws DepartureServiceException {
+<span class="nc" id="L46">		departureService.addDeparture(&quot;Flight1&quot;, null, &quot;MIA&quot;, &quot;09:33&quot;);</span>
+<span class="nc" id="L47">	}</span>
+	
+	@Test(expected=DepartureServiceException.class)
+	public void testAddDeparture_throwsException_whenGateEmpty() throws DepartureServiceException {
+<span class="nc" id="L51">		departureService.addDeparture(&quot;Flight1&quot;, &quot;&quot;, &quot;MIA&quot;, &quot;09:33&quot;);</span>
+<span class="nc" id="L52">	}</span>
+	
+	@Test(expected=DepartureServiceException.class)
+	public void testAddDeparture_throwsException_whenDestNull() throws DepartureServiceException {
+<span class="nc" id="L56">		departureService.addDeparture(&quot;Flight1&quot;, &quot;A2&quot;, null, &quot;09:33&quot;);</span>
+<span class="nc" id="L57">	}</span>
+	
+	@Test(expected=DepartureServiceException.class)
+	public void testAddDeparture_throwsException_whenDestEmpty() throws DepartureServiceException {
+<span class="nc" id="L61">		departureService.addDeparture(&quot;Flight1&quot;, &quot;A1&quot;, &quot;&quot;, &quot;09:33&quot;);</span>
+<span class="nc" id="L62">	}</span>
+	
+	@Test(expected=DepartureServiceException.class)
+	public void testAddDeparture_throwsException_whenTimeNull() throws DepartureServiceException {
+<span class="nc" id="L66">		departureService.addDeparture(&quot;Flight1&quot;, &quot;A2&quot;, &quot;LAX&quot;, null);</span>
+<span class="nc" id="L67">	}</span>
+	
+	@Test(expected=DepartureServiceException.class)
+	public void testAddDeparture_throwsException_whenTimeEmpty() throws DepartureServiceException {
+<span class="nc" id="L71">		departureService.addDeparture(&quot;Flight1&quot;, &quot;A1&quot;, &quot;LAX&quot;, &quot;&quot;);</span>
+<span class="nc" id="L72">	}</span>
+	
+	@Test
+	public void testAddDeparture_throwsNoException_whenPassedValidInputs() throws DepartureServiceException {
+<span class="fc" id="L76">		departureService.addDeparture(&quot;Flight1&quot;, &quot;A1&quot;, &quot;LAX&quot;, &quot;09:00&quot;);</span>
+<span class="fc" id="L77">		assertTrue(true);</span>
+<span class="fc" id="L78">	}</span>
+	
+	@Test
+	public void testHasValidData_ReturnFalse_whenNoDeptsAdded(){
+<span class="fc" id="L82">		departureService = new FlightDepartureService(); </span>
+<span class="fc" id="L83">		assertFalse(departureService.hasValidData());</span>
+<span class="fc" id="L84">	}</span>
+	
+	@Test
+	public void testHasValidData_ReturnTrue_whenDeptsAdded() throws DepartureServiceException{
+<span class="fc" id="L88">		departureService = new FlightDepartureService();</span>
+<span class="fc" id="L89">		departureService.addDeparture(&quot;Flight1&quot;, &quot;A1&quot;, &quot;LAX&quot;, &quot;09:00&quot;);</span>
+<span class="fc" id="L90">		assertTrue(departureService.hasValidData());</span>
+<span class="fc" id="L91">	}</span>
+	
+	@Test
+	public void testGetFlightDepartureDetail_ReturnNull_whenNoDeptsAdded(){
+<span class="fc" id="L95">		departureService = new FlightDepartureService(); </span>
+<span class="fc" id="L96">		assertNull(departureService.getFlightDepartureDetail(&quot;UA11&quot;));</span>
+<span class="fc" id="L97">	}</span>
+	
+	@Test
+	public void testGetFlightDepartureDetail_ReturnValidDetail_whenDeptsAdded() throws DepartureServiceException{
+<span class="fc" id="L101">		departureService = new FlightDepartureService();</span>
+<span class="fc" id="L102">		departureService.addDeparture(&quot;Flight2&quot;, &quot;A1&quot;, &quot;LAX&quot;, &quot;09:00&quot;);</span>
+<span class="fc" id="L103">		departureService.addDeparture(&quot;Flight3&quot;, &quot;A1&quot;, &quot;LAX&quot;, &quot;09:00&quot;);</span>
+<span class="fc" id="L104">		departureService.addDeparture(&quot;Flight4&quot;, &quot;A1&quot;, &quot;LAX&quot;, &quot;09:00&quot;);</span>
+<span class="fc" id="L105">		assertNotNull(departureService.getFlightDepartureDetail(&quot;Flight2&quot;));</span>
+<span class="fc" id="L106">		assertNotNull(departureService.getFlightDepartureDetail(&quot;Flight3&quot;));</span>
+<span class="fc" id="L107">		assertNotNull(departureService.getFlightDepartureDetail(&quot;Flight4&quot;));</span>
+<span class="fc" id="L108">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span>DenverAirportBaggageService (Jan 6, 2017 8:03:30 AM)</div></body></html>

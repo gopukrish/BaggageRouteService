@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>FlightDepartureDetail.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">DenverAirportBaggageService (Jan 6, 2017 8:03:30 AM)</a> &gt; <a href="../../index.html" class="el_group">DenverAirportBaggageService</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">com.denver.airport.domain</a> &gt; <span class="el_source">FlightDepartureDetail.java</span></div><h1>FlightDepartureDetail.java</h1><pre class="source lang-java linenums">package com.denver.airport.domain;
+
+public class FlightDepartureDetail {
+	private String flightId;
+	private String gate;
+	private String destination;
+	private String travelTime;
+	
+<span class="nc" id="L9">	public FlightDepartureDetail(){</span>
+<span class="nc" id="L10">	}</span>
+
+<span class="fc" id="L12">	public FlightDepartureDetail(String flightId, String gate, String destination, String travelTime) {</span>
+<span class="fc" id="L13">		setFlightId(flightId);</span>
+<span class="fc" id="L14">		setGate(gate);</span>
+<span class="fc" id="L15">		setDestination(destination);</span>
+<span class="fc" id="L16">		setTravelTime(travelTime);</span>
+<span class="fc" id="L17">	}</span>
+
+	public String getFlightId() {
+<span class="nc" id="L20">		return flightId;</span>
+	}
+
+	public void setFlightId(String flightId) {
+<span class="fc" id="L24">		this.flightId = flightId;</span>
+<span class="fc" id="L25">	}</span>
+
+	public String getGate() {
+<span class="fc" id="L28">		return gate;</span>
+	}
+
+	public void setGate(String gate) {
+<span class="fc" id="L32">		this.gate = gate;</span>
+<span class="fc" id="L33">	}</span>
+
+	public String getDestination() {
+<span class="nc" id="L36">		return destination;</span>
+	}
+
+	public void setDestination(String destination) {
+<span class="fc" id="L40">		this.destination = destination;</span>
+<span class="fc" id="L41">	}</span>
+
+	public String getTravelTime() {
+<span class="nc" id="L44">		return travelTime;</span>
+	}
+
+	public void setTravelTime(String travelTime) {
+<span class="fc" id="L48">		this.travelTime = travelTime;</span>
+<span class="fc" id="L49">	}</span>
+
+	@Override
+	public String toString() {
+<span class="nc" id="L53">		return &quot;FlightDetail [flightId=&quot; + flightId + &quot;, gate=&quot; + gate + &quot;, destination=&quot; + destination</span>
+<span class="nc" id="L54">				+ &quot;, travelTime=&quot; + travelTime + &quot;]&quot;;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span>DenverAirportBaggageService (Jan 6, 2017 8:03:30 AM)</div></body></html>
